@@ -10,7 +10,6 @@ namespace SkiaPlugin.Renderables
 {
     class RenderableCircle : RenderableSkiaObject
     {
-
         internal override void DrawToSurface(SKSurface surface)
         {
             surface.Canvas.Clear(SKColors.Transparent);
