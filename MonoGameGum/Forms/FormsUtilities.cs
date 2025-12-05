@@ -165,6 +165,7 @@ public class FormsUtilities
             {
                 FrameworkElement.DefaultFormsTemplates[formsType] = new VisualTemplate(runtimeType);
             }
+            // This is needed until MonoGameGum.Forms goes away completely. It's now marked as obsolete with error as of November 2025
             if(formsType.FullName.StartsWith("MonoGameGum.Forms."))
             {
                 var baseType = formsType.BaseType;
@@ -199,6 +200,7 @@ public class FormsUtilities
     static ContainerRuntime CreateFullscreenContainer(string name, SystemManagers systemManagers)
     {
         var container = new ContainerRuntime();
+
         container.Children.CollectionChanged += (o,e) => HandleRootCollectionChanged (container, e);
         container.WidthUnits = Gum.DataTypes.DimensionUnitType.Absolute;
         container.HeightUnits = Gum.DataTypes.DimensionUnitType.Absolute;
@@ -494,9 +496,18 @@ public class FormsUtilities
             }
             else if (categoryNames.Contains("LabelCategory") || behaviorNames.Contains("LabelBehavior"))
             {
-                ElementSaveExtensions.RegisterGueInstantiationType(
-                    component.Name,
-                    typeof(DefaultFromFileLabelRuntime), overwriteIfAlreadyExists: false);
+                if(component.BaseType == "Text")
+                {
+                    ElementSaveExtensions.RegisterGueInstantiationType(
+                        component.Name,
+                        typeof(DefaultFromFileLabelTextRuntime), overwriteIfAlreadyExists: false);
+                }
+                else
+                {
+                    ElementSaveExtensions.RegisterGueInstantiationType(
+                        component.Name,
+                        typeof(DefaultFromFileLabelRuntime), overwriteIfAlreadyExists: false);
+                }
             }
             else if (behaviorNames.Contains("ListBoxBehavior"))
             {
